@@ -36,18 +36,22 @@ void BEngine::CauseExeption(const char * message)
 void BEngine::CreateWindow(int width, int height, const char * title, GLFWmonitor * monitor, GLFWwindow * share)
 {
 	window = glfwCreateWindow(width, height, title, monitor, share);
-	if (window == nullptr)
-	{
+	if (window == nullptr) {
 		glfwTerminate();
 		CauseExeption("Failed to create GLFW window.");
 	}
-	else
+	else {
 		glViewport(0, 0, width, height);
+		glfwMakeContextCurrent(window);
+	}
+
 }
 
 void BEngine::UsingGlew()
 {
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
+	if (glewInit() != GLEW_OK) {
 		CauseExeption("Failed to initialize GLEW.");
+	}
+
 }

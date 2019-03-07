@@ -13,6 +13,8 @@
 #include <cstdlib> 
 #include <stdexcept>
 
+#include "ShaderProgram.h"
+
 class BEngine
 {
 public:
@@ -20,6 +22,7 @@ public:
 	~BEngine();
 
 	GLFWwindow* window;
+	ShaderProgram shaderProgram;
 	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
 	void UsingGlew();
 private:
