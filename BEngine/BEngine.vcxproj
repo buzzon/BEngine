@@ -21,14 +21,12 @@
   <ItemGroup>
     <ClCompile Include="Core\BEngine.cpp" />
     <ClCompile Include="Core\Main.cpp" />
-    <ClCompile Include="Core\Shader.cpp" />
     <ClCompile Include="Core\ShaderProgram.cpp" />
     <ClCompile Include="Core\Tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h" />
     <ClInclude Include="Core\Camera.h" />
-    <ClInclude Include="Core\Shader.h" />
     <ClInclude Include="Core\ShaderProgram.h" />
     <ClInclude Include="Core\Tools.h" />
   </ItemGroup>

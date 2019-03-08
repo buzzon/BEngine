@@ -1,15 +1,18 @@
 #pragma once
 #include <GL/glew.h>;
-#include "Shader.h"
+#include "Tools.h"
+
+#define LOG_SIZE 1024
 
 class ShaderProgram
 {
 public:
 	void AddShader(GLenum shaderType, const char * path);
 	void CreateProgram();
-	GLint program;
+	void Use();
 private:
-	Shader shader;
+	GLint program;
 	GLint success;
-	GLchar infoLog[infoLogSize];
+	GLchar infoLog[LOG_SIZE];
+	GLint LoadShader(GLenum shaderType, const char * path);
 };

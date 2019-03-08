@@ -25,6 +25,9 @@ public:
 	ShaderProgram shaderProgram;
 	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
 	void UsingGlew();
+
+	void WriteSpecifications(); // Вывести возможности ПК
+	int GetMaxNR(); //Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 private:
 	void Message(const char *message);
 	void ErrorMessage(const char *message);
