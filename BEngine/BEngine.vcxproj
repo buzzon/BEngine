@@ -33,8 +33,8 @@
     <ClInclude Include="Core\Tools.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Shaders\FragmentShader.glsl" />
-    <None Include="Core\Shaders\VertexShader.glsl" />
+    <None Include="Shaders\FragmentShader.glsl" />
+    <None Include="Shaders\VertexShader.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

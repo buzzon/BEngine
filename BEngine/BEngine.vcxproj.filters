@@ -52,10 +52,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Shaders\FragmentShader.glsl">
+    <None Include="Shaders\FragmentShader.glsl">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
-    <None Include="Core\Shaders\VertexShader.glsl">
+    <None Include="Shaders\VertexShader.glsl">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
   </ItemGroup>
