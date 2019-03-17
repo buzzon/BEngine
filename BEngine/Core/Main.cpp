@@ -1,10 +1,18 @@
 #include "BEngine.h"
 
 BEngine engine;
+GLfloat mixValue = 0.2f;
+
+// Function prototypes
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 int main()
 {	engine.CreateWindow(800, 600, "SandBox", nullptr, nullptr);
 	glfwMakeContextCurrent(engine.window);
+
+	// Set the required callback functions
+	glfwSetKeyCallback(engine.window, key_callback);
+
 	engine.UsingGlew();
 
 	engine.WriteSpecifications();
@@ -111,6 +119,8 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture2"), 1);
 
+		glUniform1f(glGetUniformLocation(engine.shaderProgram.program, "mixValue"), mixValue);
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
@@ -118,4 +128,22 @@ int main()
 		glfwSwapBuffers(engine.window);
 	}
 	return 0;
+}
+
+// Is called whenever a key is pressed/released via GLFW
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_UP && action == GLFW_REPEAT)
+	{
+		if (mixValue < 1.0f)
+			mixValue += 0.01f;
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
+	{
+		if (mixValue > 0.0f)
+			mixValue -= 0.01f;
+	}
 }
