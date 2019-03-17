@@ -10,8 +10,8 @@ public:
 	void AddShader(GLenum shaderType, const char * path);
 	void CreateProgram();
 	void Use();
-private:
 	GLint program;
+private:
 	GLint success;
 	GLchar infoLog[LOG_SIZE];
 	GLint LoadShader(GLenum shaderType, const char * path);
