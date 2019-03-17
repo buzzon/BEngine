@@ -101,7 +101,6 @@ int main()
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-
 	while (!glfwWindowShouldClose(engine.window))
 	{
 		glfwPollEvents();
@@ -120,6 +119,15 @@ int main()
 		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture2"), 1);
 
 		glUniform1f(glGetUniformLocation(engine.shaderProgram.program, "mixValue"), mixValue);
+
+		//Трансформация
+		glm::mat4 transform;
+		//transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+		transform = glm::rotate(transform, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// Get matrix's uniform location and set matrix
+		GLint transformLoc = glGetUniformLocation(engine.shaderProgram.program, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
