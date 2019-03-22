@@ -9,7 +9,7 @@ void ShaderProgram::AddShader(GLenum shaderType, const char * path)
 	glGetProgramiv(program, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(program, LOG_SIZE, NULL, infoLog);
-		std::cout << "ERROR::SHADER_PROGRAMM::COMPILATION_FAILED\n" << infoLog << std::endl;
+		ErrorMessage("SHADER_PROGRAMM::COMPILATION_FAILED\n" + std::string(infoLog) );
 	}
 
 	glDeleteShader(shader);
@@ -36,7 +36,7 @@ GLint ShaderProgram::LoadShader(GLenum shaderType, const char * path)
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(shader, LOG_SIZE, NULL, infoLog);
-		std::cout << "ERROR::" << shaderType << "::COMPILATION_FAILED\n" << infoLog << std::endl;
+		ErrorMessage(std::to_string(shaderType) + "_SHADER::COMPILATION_FAILED\n" + std::string(infoLog));
 	}
 
 	return shader;

@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>;
 #include "Tools.h"
+#include "Message.h"
 
 #define LOG_SIZE 1024
 
