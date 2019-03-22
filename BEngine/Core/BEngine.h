@@ -2,23 +2,21 @@
 
 #define GLFWVERMAJOR 3
 #define GLFWVERMINOR 3
-#define BName "BEngine"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <SOIL/SOIL.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <stdio.h>
-#include <cstdlib> 
-#include <stdexcept>
-
 #include "ShaderProgram.h"
+#include "Texture.h"
+#include "Message.h"
+
+// удалить
+#include <SOIL/SOIL.h>
 
 class BEngine
 {
@@ -32,10 +30,7 @@ public:
 	void UsingGlew();
 
 	void WriteSpecifications(); // Вывести возможности ПК
-	int GetMaxNR(); //Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
+	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 private:
-	void Message(const char *message);
-	void ErrorMessage(const char *message);
-	void CauseExeption(const char *message);
 };
 

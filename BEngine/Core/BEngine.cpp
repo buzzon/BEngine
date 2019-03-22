@@ -1,7 +1,7 @@
 #include "BEngine.h"
 
 void BEngine::WriteSpecifications() {
-	std::cout << "Maximum nr of vertex attributes supported: " << GetMaxNR() << std::endl;
+	Message("Maximum nr of vertex attributes supported: " + std::to_string( GetMaxNR() ) );
 }
 
 int BEngine::GetMaxNR() {
@@ -24,20 +24,6 @@ BEngine::~BEngine() {
 	Message("Successfully disabled!");
 }
 
-void BEngine::Message(const char *message) {
-	printf("[%s] : %s \n", BName, message);
-}
-
-void BEngine::ErrorMessage(const char * message) {
-	printf("[%s] [ERROR] : %s \n", BName, message);
-}
-
-void BEngine::CauseExeption(const char * message) {
-	ErrorMessage(message);
-	system("pause");
-	throw std::invalid_argument(message);
-}
-
 void BEngine::CreateWindow(	int width,
 							int height,
 							const char * title,
@@ -55,7 +41,6 @@ void BEngine::CreateWindow(	int width,
 
 void BEngine::UsingGlew() {
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) {
+	if (glewInit() != GLEW_OK)
 		CauseExeption("Failed to initialize GLEW.");
-	}
 }

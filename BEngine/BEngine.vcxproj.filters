@@ -30,6 +30,12 @@
     <ClCompile Include="Core\Tools.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Texture.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Message.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h">
@@ -44,12 +50,18 @@
     <ClInclude Include="Core\Camera.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Texture.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Message.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\FragmentShader.glsl">
+    <None Include="Shaders\FragmentShader.frag">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
-    <None Include="Shaders\VertexShader.glsl">
+    <None Include="Shaders\VertexShader.vert">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
   </ItemGroup>
