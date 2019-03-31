@@ -25,6 +25,7 @@
     <ClCompile Include="Core\Tools.cpp" />
     <ClCompile Include="Core\Texture.cpp" />
     <ClCompile Include="Core\Message.cpp" />
+    <ClCompile Include="Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Core\Tools.h" />
     <ClInclude Include="Core\Texture.h" />
     <ClInclude Include="Core\Message.h" />
+    <ClInclude Include="Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.frag" />

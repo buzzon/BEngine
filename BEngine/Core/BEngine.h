@@ -7,13 +7,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "Message.h"
+#include "Window.h"
 
 // удалить
 #include <SOIL/SOIL.h>
@@ -24,13 +21,14 @@ public:
 	BEngine();
 	~BEngine();
 
-	GLFWwindow* window;
-	ShaderProgram shaderProgram;
-	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
-	void UsingGlew();
+	enum WinSize { HEIGHT = 600, WIDTH = 800 };
 
+	ShaderProgram shaderProgram;
+	Window window;
+
+	void UsingGlew();
 	void WriteSpecifications(); // Вывести возможности ПК
-	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 private:
+	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 };
 
