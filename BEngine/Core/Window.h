@@ -13,8 +13,10 @@
 class Window
 {
 public:
-	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
+	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor = nullptr, GLFWwindow* share = nullptr);
 	void SetKeyCallback(GLFWkeyfun key_callback);
+	void SetMouseCallback(GLFWcursorposfun mouse_callback);
+
 	void SwapBuffers();
 	bool WindowShouldClose();
 

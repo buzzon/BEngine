@@ -4,6 +4,18 @@ void BEngine::WriteSpecifications() {
 	Message("Maximum nr of vertex attributes supported: " + std::to_string( GetMaxNR() ) );
 }
 
+void BEngine::CalculateNewDeltaTime()
+{
+	GLfloat currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+}
+
+GLfloat BEngine::GetDeltaTime()
+{
+	return deltaTime;
+}
+
 int BEngine::GetMaxNR() {
 	GLint nrAttributes;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
