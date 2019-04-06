@@ -2,10 +2,7 @@
 
 #define GLFWVERMAJOR 3
 #define GLFWVERMINOR 3
-
 #define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -28,7 +25,12 @@ public:
 
 	void UsingGlew();
 	void WriteSpecifications(); // Вывести возможности ПК
+	void CalculateNewDeltaTime(); // Вычислить новое значение deltaTime
+	GLfloat GetDeltaTime();
 private:
 	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
+
+	GLfloat deltaTime = 0.0f;	// Время, прошедшее между последним и текущим кадром
+	GLfloat lastFrame = 0.0f;  	// Время вывода последнего кадра
 };
 

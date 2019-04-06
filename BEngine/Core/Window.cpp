@@ -13,6 +13,8 @@ void Window::CreateWindow(int width,
 	else {
 		glViewport(0, 0, width, height);
 		glfwMakeContextCurrent(window);
+
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // захватить курсор и скрыть указатель мыши
 	}
 }
 
@@ -20,6 +22,11 @@ void Window::CreateWindow(int width,
 void Window::SetKeyCallback(GLFWkeyfun key_callback)
 {
 	glfwSetKeyCallback(window, key_callback);
+}
+
+void Window::SetMouseCallback(GLFWcursorposfun mouse_callback)
+{
+	glfwSetCursorPosCallback(window, mouse_callback);
 }
 
 // Swap the screen buffers
