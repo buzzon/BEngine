@@ -7,7 +7,6 @@ GLfloat mixValue = 0.2f;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void do_movement(); // Передвижение наблюдателя 
-void do_control(); // Функциональные клавиши
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -135,7 +134,6 @@ int main()
 
 		glfwPollEvents();
 		do_movement();
-		do_control();
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -193,19 +191,50 @@ int main()
 	return 0;
 }
 
+
+bool LineMode = false;
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (action == GLFW_PRESS)
+	if (keys[GLFW_KEY_UP] && mixValue < 1.0f)
+			mixValue += 0.01f;
+	if (keys[GLFW_KEY_DOWN] && mixValue > 0.0f)
+			mixValue -= 0.01f;
+
+	if (key == GLFW_KEY_F3 && action == GLFW_PRESS) {
+		if (!LineMode)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		LineMode = !LineMode;
+	}
+
+	if (action == GLFW_PRESS) 
 		keys[key] = true;
+		//Message(std::to_string(key) + " key pressed.");
 	else if (action == GLFW_RELEASE)
 		keys[key] = false;
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) 
+void do_movement()
+{
+	// Camera controls
+	GLfloat cameraSpeed = 3.0f * engine.GetDeltaTime();
+	if (keys[GLFW_KEY_W])
+		cameraPos += cameraSpeed * cameraFront;
+	if (keys[GLFW_KEY_S])
+		cameraPos -= cameraSpeed * cameraFront;
+	if (keys[GLFW_KEY_A])
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (keys[GLFW_KEY_D])
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
 	{
@@ -237,38 +266,3 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	cameraFront = glm::normalize(front);
 };
-
-void do_movement()
-{
-	// Camera controls
-	GLfloat cameraSpeed = 3.0f * engine.GetDeltaTime();
-	if (keys[GLFW_KEY_W])
-		cameraPos += cameraSpeed * cameraFront;
-	if (keys[GLFW_KEY_S])
-		cameraPos -= cameraSpeed * cameraFront;
-	if (keys[GLFW_KEY_A])
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (keys[GLFW_KEY_D])
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-}
-
-bool LineMode = false;
-
-void do_control() 
-{
-	if (keys[GLFW_KEY_UP])
-		if (mixValue < 1.0f)
-			mixValue += 0.01f;
-	if (keys[GLFW_KEY_DOWN])
-		if (mixValue > 0.0f)
-			mixValue -= 0.01f;
-
-	if (keys[GLFW_KEY_F3])
-	{
-		if (!LineMode)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		LineMode = !LineMode;
-	}
-}
