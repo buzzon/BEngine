@@ -9,9 +9,6 @@
 #include "Message.h"
 #include "Window.h"
 
-// удалить
-#include <SOIL/SOIL.h>
-
 class BEngine
 {
 public:
@@ -26,7 +23,7 @@ public:
 	void UsingGlew();
 	void WriteSpecifications(); // Вывести возможности ПК
 	void CalculateNewDeltaTime(); // Вычислить новое значение deltaTime
-	GLfloat GetDeltaTime();
+	GLfloat GetDeltaTime(); // Возвращает время, прошедшее между последним и текущим кадром
 private:
 	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 
