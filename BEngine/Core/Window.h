@@ -17,8 +17,10 @@ public:
 	void SetKeyCallback(GLFWkeyfun key_callback);
 	void SetMouseCallback(GLFWcursorposfun mouse_callback);
 
-	void SwapBuffers();
-	bool WindowShouldClose();
+
+	void SetCursorPos(GLint xpos, GLint ypos); // Устанавливает курсор в позицию x y
+	void SwapBuffers(); // Заменяет буферы экрана
+	bool WindowShouldClose(); // Проверяет закрыто ди окно
 
 private:
 	GLFWwindow* window;

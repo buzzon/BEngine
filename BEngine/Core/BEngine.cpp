@@ -4,15 +4,13 @@ void BEngine::WriteSpecifications() {
 	Message("Maximum nr of vertex attributes supported: " + std::to_string( GetMaxNR() ) );
 }
 
-void BEngine::CalculateNewDeltaTime()
-{
+void BEngine::CalculateNewDeltaTime() {
 	GLfloat currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 }
 
-GLfloat BEngine::GetDeltaTime()
-{
+GLfloat BEngine::GetDeltaTime() {
 	return deltaTime;
 }
 
@@ -28,6 +26,7 @@ BEngine::BEngine() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLFWVERMAJOR);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWVERMINOR);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	Message("Starting engine");
 }
 

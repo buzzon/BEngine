@@ -18,30 +18,26 @@ void Window::CreateWindow(int width,
 	}
 }
 
-// Set the required callback functions
-void Window::SetKeyCallback(GLFWkeyfun key_callback)
-{
+void Window::SetKeyCallback(GLFWkeyfun key_callback) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
-void Window::SetMouseCallback(GLFWcursorposfun mouse_callback)
-{
+void Window::SetMouseCallback(GLFWcursorposfun mouse_callback) {
 	glfwSetCursorPosCallback(window, mouse_callback);
 }
 
-// Swap the screen buffers
-void Window::SwapBuffers()
-{
+void Window::SetCursorPos(GLint xpos, GLint ypos) {
+	glfwSetCursorPos(window, xpos, ypos);
+}
+
+void Window::SwapBuffers() {
 	glfwSwapBuffers(window);
 }
 
-bool Window::WindowShouldClose()
-{
+bool Window::WindowShouldClose() {
 	return glfwWindowShouldClose(window);
 }
 
-void Window::MakeContextCurrent()
-{
+void Window::MakeContextCurrent() {
 	glfwMakeContextCurrent(window);
 }
-

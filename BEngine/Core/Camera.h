@@ -33,7 +33,7 @@ private:
 	glm::vec3 up;
 
 	float FoV; // Поле обзора
-	//float attitudeOfParties = 16.0f / 9.0f; // Отношение сторон
+	float attitudeOfParties = 16.0f / 9.0f; // Отношение сторон
 	float nearClippingPlane = 0.1f; // Ближняя плоскость отсечения
 	float farClippingPlane = 100.f; // Дальняя плоскость отсечения
 
