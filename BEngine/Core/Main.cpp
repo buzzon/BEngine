@@ -214,13 +214,13 @@ void do_movement()
 {
 	// Camera controls
 	if (keys[GLFW_KEY_W])
-		engine.camera.Move(Camera_Movement::FORWARD, engine.GetDeltaTime());
+		engine.camera.Move(Camera::Movement::FORWARD, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_S])
-		engine.camera.Move(Camera_Movement::BACKWARD, engine.GetDeltaTime());
+		engine.camera.Move(Camera::Movement::BACKWARD, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_A])
-		engine.camera.Move(Camera_Movement::LEFT, engine.GetDeltaTime());
+		engine.camera.Move(Camera::Movement::LEFT, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_D])
-		engine.camera.Move(Camera_Movement::RIGHT, engine.GetDeltaTime());
+		engine.camera.Move(Camera::Movement::RIGHT, engine.GetDeltaTime());
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
