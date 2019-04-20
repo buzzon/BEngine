@@ -8,15 +8,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void do_movement(); // Передвижение наблюдателя 
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-GLfloat yaw = -90.0f;
-GLfloat pitch = 0.0f;
-double	lastX = 400,
-lastY = 300;
-GLfloat sensitivity = 0.05;
+double lastX = 400;
+double lastY = 300;
 
 bool LineMode = false; // Метод отрисовки полигонов
 
@@ -167,8 +160,6 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture_face);
 		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture2"), 1);
 
-		// Работа с камерой (наблюдателем)
-
 		// Camera/View transformation
 		glm::mat4 view = engine.camera.GetViewMatrix();
 		glm::mat4 projection = engine.camera.GetProjectionMatrix((GLfloat)BEngine::WIDTH / (GLfloat)BEngine::HEIGHT);
@@ -204,7 +195,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-
 
 	if (key == GLFW_KEY_F3 && action == GLFW_PRESS) {
 		if (!LineMode)
