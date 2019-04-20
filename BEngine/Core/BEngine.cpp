@@ -1,13 +1,22 @@
 #include "BEngine.h"
 
 void BEngine::WriteSpecifications() {
-	Message("Maximum nr of vertex attributes supported: " + std::to_string( GetMaxNR() ) );
+	Message("Maximum nr of vertex attributes supported: " + std::to_string(GetMaxNR()));
 }
 
-void BEngine::CalculateNewDeltaTime() {
+void BEngine::CalculateDeltaTime() {
 	GLfloat currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
+}
+
+void BEngine::SetEnables(GLenum cap, ...)
+{
+	GLenum *p = &cap;
+	while (*p) {
+		glEnable(cap);
+		p++;
+	}
 }
 
 GLfloat BEngine::GetDeltaTime() {
@@ -17,7 +26,7 @@ GLfloat BEngine::GetDeltaTime() {
 int BEngine::GetMaxNR() {
 	GLint nrAttributes;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	return nrAttributes; 
+	return nrAttributes;
 }
 
 BEngine::BEngine() {

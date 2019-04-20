@@ -15,12 +15,12 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 GLfloat yaw = -90.0f;
 GLfloat pitch = 0.0f;
 double	lastX = 400,
-		lastY = 300;
+lastY = 300;
 GLfloat sensitivity = 0.05;
 
-bool LineMode = false;
+bool LineMode = false; // Метод отрисовки полигонов
 
-void loadPermInShader() 
+void loadPermInShader()
 {
 	GLfloat mixValue = 0.2f;
 
@@ -37,14 +37,8 @@ void loadPermInShader()
 int main()
 {
 	engine.window.CreateWindow(BEngine::WIDTH, BEngine::HEIGHT, "SandBox");
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_MULTISAMPLE);
-
-	// Отсечение граней, отвернутых от наблюдателя
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
-	glFrontFace(GL_CW);
+	engine.SetEnables(GL_DEPTH_TEST, GL_MULTISAMPLE);
+	engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
 
 	// Set the required callback functions
 	engine.window.SetKeyCallback(key_callback);
@@ -57,6 +51,7 @@ int main()
 	engine.shaderProgram.AddShader(GL_VERTEX_SHADER, "Shaders/VertexShader.vert");
 	engine.shaderProgram.AddShader(GL_FRAGMENT_SHADER, "Shaders/FragmentShader.frag");
 
+	// Load Model
 	float vertices[] = {
 		// Back face
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
@@ -118,6 +113,7 @@ int main()
 		1, 2, 3
 	};
 
+	// Create Buffers
 	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -144,13 +140,15 @@ int main()
 	glBindVertexArray(0);
 
 	// Load and create a texture 
-	GLuint texture1 = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
-	GLuint texture2 = Texture::LoadTexture("awesomeface.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	GLuint texture_box = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	GLuint texture_face = Texture::LoadTexture("awesomeface.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+
+	engine.camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	engine.window.SetCursorPos(BEngine::WIDTH / 2, BEngine::HEIGHT / 2);
 	while (!engine.window.WindowShouldClose())
 	{
-		engine.CalculateNewDeltaTime();
+		engine.CalculateDeltaTime();
 
 		glfwPollEvents();
 		do_movement();
@@ -162,18 +160,18 @@ int main()
 
 		// Bind Textures using texture units
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
+		glBindTexture(GL_TEXTURE_2D, texture_box);
 		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture1"), 0);
 
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
+		glBindTexture(GL_TEXTURE_2D, texture_face);
 		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture2"), 1);
 
 		// Работа с камерой (наблюдателем)
 
 		// Camera/View transformation
-		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-		glm::mat4 projection = glm::perspective(45.0f, (float)BEngine::WIDTH / (float)BEngine::HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = engine.camera.GetViewMatrix();
+		glm::mat4 projection = engine.camera.GetProjectionMatrix((GLfloat)BEngine::WIDTH / (GLfloat)BEngine::HEIGHT);
 
 		// Get their uniform location
 		GLint modelLoc = glGetUniformLocation(engine.shaderProgram.program, "model");
@@ -216,7 +214,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		LineMode = !LineMode;
 	}
 
-	if (action == GLFW_PRESS) 
+	if (action == GLFW_PRESS)
 		keys[key] = true;
 	else if (action == GLFW_RELEASE)
 		keys[key] = false;
@@ -225,15 +223,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void do_movement()
 {
 	// Camera controls
-	GLfloat cameraSpeed = 3.0f * engine.GetDeltaTime();
 	if (keys[GLFW_KEY_W])
-		cameraPos += cameraSpeed * cameraFront;
+		engine.camera.Move(Camera_Movement::FORWARD, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_S])
-		cameraPos -= cameraSpeed * cameraFront;
+		engine.camera.Move(Camera_Movement::BACKWARD, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_A])
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		engine.camera.Move(Camera_Movement::LEFT, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_D])
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		engine.camera.Move(Camera_Movement::RIGHT, engine.GetDeltaTime());
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -244,20 +241,5 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastX = xpos;
 	lastY = ypos;
 
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	yaw += xoffset;
-	pitch += yoffset;
-
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 front;
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(front);
+	engine.camera.Rotate(xoffset, yoffset);
 };

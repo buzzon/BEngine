@@ -3,11 +3,14 @@
 #define GLFWVERMAJOR 3
 #define GLFWVERMINOR 3
 #define GLEW_STATIC
+#include "INCLUDE_GL.h"
 
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "Message.h"
 #include "Window.h"
+#include "FaceManager.h"
+#include "Camera.h"
 
 class BEngine
 {
@@ -20,9 +23,15 @@ public:
 	ShaderProgram shaderProgram;
 	Window window;
 
+	Camera camera;
+
 	void UsingGlew();
 	void WriteSpecifications(); // Вывести возможности ПК
-	void CalculateNewDeltaTime(); // Вычислить новое значение deltaTime
+	void CalculateDeltaTime(); // Вычислить значение deltaTime
+
+	void SetEnables(GLenum cap, ...);
+	FaceManager faceManager; // Управляет отсечением граней 
+
 	GLfloat GetDeltaTime(); // Возвращает время, прошедшее между последним и текущим кадром
 private:
 	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
