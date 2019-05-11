@@ -41,8 +41,12 @@
     <ClInclude Include="Core\FaceManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Lamp.frag" />
+    <None Include="Shaders\Lighting.frag" />
+    <None Include="Shaders\Lighting.vert" />
     <None Include="Shaders\FragmentShader.frag" />
     <None Include="Shaders\VertexShader.vert" />
+    <None Include="Shaders\Lamp.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

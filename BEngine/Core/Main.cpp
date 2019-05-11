@@ -8,24 +8,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void do_movement(); // Передвижение наблюдателя 
 
-double lastX = 400;
-double lastY = 300;
+double lastX = BEngine::WIDTH / 2;
+double lastY = BEngine::HEIGHT / 2;
+
+// Light attributes
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 bool LineMode = false; // Метод отрисовки полигонов
-
-void loadPermInShader()
-{
-	GLfloat mixValue = 0.2f;
-
-	// В цикле
-	glUniform1f(glGetUniformLocation(engine.shaderProgram.program, "mixValue"), mixValue);
-
-	// Texture control
-	if (keys[GLFW_KEY_UP] && mixValue < 1.0f)
-		mixValue += 1.0f * engine.GetDeltaTime();
-	if (keys[GLFW_KEY_DOWN] && mixValue > 0.0f)
-		mixValue -= 1.0f * engine.GetDeltaTime();
-}
 
 int main()
 {
@@ -40,9 +29,16 @@ int main()
 	engine.UsingGlew();
 	engine.WriteSpecifications();
 
-	engine.shaderProgram.CreateProgram();
-	engine.shaderProgram.AddShader(GL_VERTEX_SHADER, "Shaders/VertexShader.vert");
-	engine.shaderProgram.AddShader(GL_FRAGMENT_SHADER, "Shaders/FragmentShader.frag");
+
+	ShaderProgram lightingShader;
+	lightingShader.CreateProgram();
+	lightingShader.AddShader(GL_VERTEX_SHADER, "Shaders/Lighting.vert");
+	lightingShader.AddShader(GL_FRAGMENT_SHADER, "Shaders/Lighting.frag");
+
+	ShaderProgram lampShader;
+	lampShader.CreateProgram();
+	lampShader.AddShader(GL_VERTEX_SHADER, "Shaders/Lamp.vert");
+	lampShader.AddShader(GL_FRAGMENT_SHADER, "Shaders/Lamp.frag");
 
 	// Load Model
 	float vertices[] = {
@@ -101,40 +97,39 @@ int main()
 		glm::vec3(1.5f,  0.2f, -1.5f),
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-	GLuint indices[] = {
-		0, 1, 3,
-		1, 2, 3
-	};
 
 	// Create Buffers
-	GLuint VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
+	GLuint VBO, containerVAO, EBO;
+	glGenVertexArrays(1, &containerVAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindVertexArray(containerVAO);
 
 	// Атрибут с координатами
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	// Атрибут с текстой
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-	// Атрибут с цветом
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	//glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	//glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 
+
+	// lightVAO
+	GLuint lightVAO;
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
 	// Load and create a texture 
-	GLuint texture_box = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
-	GLuint texture_face = Texture::LoadTexture("awesomeface.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	//GLuint texture_box = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	//GLuint texture_face = Texture::LoadTexture("awesomeface.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
 
 	engine.camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -149,32 +144,43 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		engine.shaderProgram.Use();
+		// Use cooresponding shader when setting uniforms/drawing objects
+		lightingShader.Use();
+		GLint objectColorLoc = glGetUniformLocation(lightingShader.program, "objectColor");
+		GLint lightColorLoc = glGetUniformLocation(lightingShader.program, "lightColor");
+		glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
+		glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
 
 		// Bind Textures using texture units
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_box);
-		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture1"), 0);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, texture_box);
+		//glUniform1i(glGetUniformLocation(lightingShader.program, "ourTexture1"), 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture_face);
-		glUniform1i(glGetUniformLocation(engine.shaderProgram.program, "ourTexture2"), 1);
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, texture_face);
+		//glUniform1i(glGetUniformLocation(lightingShader.program, "ourTexture2"), 1);
 
 		// Camera/View transformation
 		glm::mat4 view = engine.camera.GetViewMatrix();
 		glm::mat4 projection = engine.camera.GetProjectionMatrix((GLfloat)BEngine::WIDTH / (GLfloat)BEngine::HEIGHT);
 
 		// Get their uniform location
-		GLint modelLoc = glGetUniformLocation(engine.shaderProgram.program, "model");
-		GLint viewLoc = glGetUniformLocation(engine.shaderProgram.program, "view");
-		GLint projLoc = glGetUniformLocation(engine.shaderProgram.program, "projection");
+		GLint modelLoc = glGetUniformLocation(lightingShader.program, "model");
+		GLint viewLoc  = glGetUniformLocation(lightingShader.program, "view");
+		GLint projLoc  = glGetUniformLocation(lightingShader.program, "projection");
 
 		// Pass them to the shaders
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-		// Draw container
-		glBindVertexArray(VAO);
+		//// Draw container
+		//glBindVertexArray(containerVAO);
+		//glm::mat4 model;
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindVertexArray(0);
+
+		glBindVertexArray(containerVAO);
 		for (GLuint i = 0; i < 10; i++)
 		{
 			glm::mat4 model;
@@ -184,6 +190,25 @@ int main()
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+		glBindVertexArray(0);
+
+		// Also draw the lamp object, again binding the appropriate shader
+		lampShader.Use();
+
+		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		modelLoc = glGetUniformLocation(lampShader.program, "model");
+		viewLoc = glGetUniformLocation(lampShader.program, "view");
+		projLoc = glGetUniformLocation(lampShader.program, "projection");
+		// Set matrices
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glm::mat4 model = glm::mat4();
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		// Draw the light object (using light's vertex attributes)
+		glBindVertexArray(lightVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
 		engine.window.SwapBuffers();

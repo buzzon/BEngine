@@ -82,5 +82,17 @@
     <None Include="Shaders\VertexShader.vert">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
+    <None Include="Shaders\Lamp.frag">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lamp.vert">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lighting.frag">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lighting.vert">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

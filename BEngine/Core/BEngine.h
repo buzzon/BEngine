@@ -20,9 +20,7 @@ public:
 
 	enum WinSize { HEIGHT = 600, WIDTH = 800 };
 
-	ShaderProgram shaderProgram;
 	Window window;
-
 	Camera camera;
 
 	void UsingGlew();
