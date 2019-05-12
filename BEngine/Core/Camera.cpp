@@ -19,6 +19,11 @@ glm::mat4 Camera::GetProjectionMatrix(GLfloat aspectRatio)
 	return glm::perspective(this->zoom, aspectRatio, this->nearClip, this->farClip);
 }
 
+glm::vec3 Camera::GetPosition()
+{
+	return position;
+}
+
 void Camera::Rotate(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
 	xoffset *= this->sensitivity;

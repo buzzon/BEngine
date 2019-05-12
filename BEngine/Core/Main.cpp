@@ -11,7 +11,6 @@ void do_movement(); // Передвижение наблюдателя
 double lastX = BEngine::WIDTH / 2;
 double lastY = BEngine::HEIGHT / 2;
 
-// Light attributes
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 bool LineMode = false; // Метод отрисовки полигонов
@@ -20,7 +19,7 @@ int main()
 {
 	engine.window.CreateWindow(BEngine::WIDTH, BEngine::HEIGHT, "SandBox");
 	engine.SetEnables(GL_DEPTH_TEST, GL_MULTISAMPLE);
-	engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
+	//engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
 
 	// Set the required callback functions
 	engine.window.SetKeyCallback(key_callback);
@@ -39,51 +38,51 @@ int main()
 	lampShader.CreateProgram();
 	lampShader.AddShader(GL_VERTEX_SHADER, "Shaders/Lamp.vert");
 	lampShader.AddShader(GL_FRAGMENT_SHADER, "Shaders/Lamp.frag");
+	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	// Load Model
 	float vertices[] = {
-		// Back face
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right         
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-		// Front face
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-		// Left face
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-		// Right face
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right         
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left     
-		// Bottom face
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-		// Top face
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right     
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // bottom-left     
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
@@ -109,11 +108,11 @@ int main()
 	glBindVertexArray(containerVAO);
 
 	// Атрибут с координатами
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	// Атрибут с текстой
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	//glEnableVertexAttribArray(1);
+	// Атрибут с нормалью
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 
@@ -123,7 +122,7 @@ int main()
 	glGenVertexArrays(1, &lightVAO);
 	glBindVertexArray(lightVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
 
@@ -146,10 +145,21 @@ int main()
 
 		// Use cooresponding shader when setting uniforms/drawing objects
 		lightingShader.Use();
-		GLint objectColorLoc = glGetUniformLocation(lightingShader.program, "objectColor");
-		GLint lightColorLoc = glGetUniformLocation(lightingShader.program, "lightColor");
-		glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-		glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+		lightingShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		lightingShader.setFloat("material.shininess", 32.0f);
+
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+		lightingShader.setVec3("light.ambient", ambientColor);
+		lightingShader.setVec3("light.diffuse", diffuseColor);
+		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+		lightingShader.setVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
+		glm::vec3 playerPos = engine.camera.GetPosition();
+		lightingShader.setVec3("viewPos", playerPos.x, playerPos.y, playerPos.z);
 
 		// Bind Textures using texture units
 		//glActiveTexture(GL_TEXTURE0);
@@ -173,13 +183,6 @@ int main()
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-		//// Draw container
-		//glBindVertexArray(containerVAO);
-		//glm::mat4 model;
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-
 		glBindVertexArray(containerVAO);
 		for (GLuint i = 0; i < 10; i++)
 		{
@@ -194,6 +197,7 @@ int main()
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
+		lampShader.setVec3("color", lightColor);
 
 		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
 		modelLoc = glGetUniformLocation(lampShader.program, "model");

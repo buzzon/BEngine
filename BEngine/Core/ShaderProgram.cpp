@@ -25,6 +25,24 @@ void ShaderProgram::Use()
 	glUseProgram(this->program);
 }
 
+void ShaderProgram::setVec3(const GLchar * name, float x, float y, float z)
+{
+	GLint lightColorLoc = glGetUniformLocation(this->program, name);
+	glUniform3f(lightColorLoc, x, y, z);
+}
+
+void ShaderProgram::setVec3(const GLchar * name, glm::vec3 vec)
+{
+	GLint lightColorLoc = glGetUniformLocation(this->program, name);
+	glUniform3f(lightColorLoc, vec.x, vec.y, vec.z);
+}
+
+void ShaderProgram::setFloat(const GLchar * name, float value)
+{
+	GLint lightColorLoc = glGetUniformLocation(this->program, name);
+	glUniform1f(lightColorLoc, value);
+}
+
 GLint ShaderProgram::LoadShader(GLenum shaderType, const char * path)
 {
 	const GLchar* ShaderSource = Tools::ReadFile(path);

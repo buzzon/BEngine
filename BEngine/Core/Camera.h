@@ -20,6 +20,7 @@ public:
 
 	glm::mat4 GetViewMatrix();
 	glm::mat4 GetProjectionMatrix(GLfloat aspectRatio);
+	glm::vec3 GetPosition();
 
 	void Rotate(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
 	void Move(Movement direction, GLfloat deltaTime);
