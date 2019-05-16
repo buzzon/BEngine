@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
+#include <glm/detail/type_mat4x4.hpp>
 
 constexpr int log_size = 1024;
 

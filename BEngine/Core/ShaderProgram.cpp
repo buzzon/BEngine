@@ -1,6 +1,7 @@
 #include "ShaderProgram.h"
 #include "Tools.h"
 #include "Message.h"
+#include <glm/gtc/type_ptr.inl>
 
 void shader_program::add_shader(const GLenum shader_type, const char * path)
 {

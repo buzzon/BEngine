@@ -13,9 +13,9 @@ void camera_control();
 double last_x = static_cast<float>(b_engine::width) / 2;
 double last_y = static_cast<float>(b_engine::height) / 2;
 
-glm::vec3 light_pos(1.2f, 1.0f, 2.0f);
+glm::vec3 light_pos(-0.2f, -1.0f, -0.3f);
 
-bool line_mode = false; // Метод отрисовки полигонов
+bool line_mode = false; // Метод отрисовки полигонов dady is best
 
 int main()
 {
@@ -154,7 +154,8 @@ int main()
 
 		// be sure to activate shader when setting uniforms/drawing objects
 		lighting_shader.use();
-		lighting_shader.set_vec3("lightPos", light_pos);
+		light_pos.z = engine.camera.get_position().z;
+		lighting_shader.set_vec3("light.direction", light_pos);
 		lighting_shader.set_vec3("viewPos", engine.camera.get_position());
 
 		// light properties
@@ -174,8 +175,8 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture_box_specular);
 
 		// Camera/View transformation
-		glm::mat4 view = engine.camera.get_view_matrix();
-		glm::mat4 projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
+		auto view = engine.camera.get_view_matrix();
+		auto projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
 
 		// Get their uniform location
 		auto model_loc = glGetUniformLocation(lighting_shader.program, "model");
@@ -194,9 +195,9 @@ int main()
 			auto angle = 20.0f * i;
 			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
 			glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-		glBindVertexArray(0);
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lamp_shader.use();
@@ -207,16 +208,16 @@ int main()
 		view_loc = glGetUniformLocation(lamp_shader.program, "view");
 		proj_loc = glGetUniformLocation(lamp_shader.program, "projection");
 		// Set matrices
+
 		glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
-		glm::mat4 model = glm::mat4();
+		auto model = glm::mat4();
 		model = glm::translate(model, light_pos);
 		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
 		glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
 		glBindVertexArray(light_vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
 
 		engine.window.swap_buffers();
 	}
