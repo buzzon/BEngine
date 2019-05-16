@@ -1,87 +1,87 @@
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 pos, GLfloat yaw, GLfloat pitch)
+camera::camera(const glm::vec3& pos, const GLfloat yaw, const GLfloat pitch)
 {
-	this->position = pos;
-	this->yaw = yaw;
-	this->pitch = pitch;
+	this->position_ = pos;
+	this->yaw_ = yaw;
+	this->pitch_ = pitch;
 
-	this->updateVectors();
+	this->update_vectors();
 }
 
-glm::mat4 Camera::GetViewMatrix()
+glm::mat4 camera::get_view_matrix() const
 {
-	return glm::lookAt(this->position, this->position + this->axes.front, this->axes.up);
+	return glm::lookAt(this->position_, this->position_ + this->axes_.front, this->axes_.up);
 }
 
-glm::mat4 Camera::GetProjectionMatrix(GLfloat aspectRatio)
+glm::mat4 camera::get_projection_matrix(const GLfloat aspect_ratio) const
 {
-	return glm::perspective(this->zoom, aspectRatio, this->nearClip, this->farClip);
+	return glm::perspective(this->zoom_, aspect_ratio, this->near_clip_, this->far_clip_);
 }
 
-glm::vec3 Camera::GetPosition()
+glm::vec3 camera::get_position() const
 {
-	return position;
+	return position_;
 }
 
-void Camera::Rotate(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
+void camera::rotate(GLfloat x_offset, GLfloat y_offset, const GLboolean constrain_pitch)
 {
-	xoffset *= this->sensitivity;
-	yoffset *= this->sensitivity;
+	x_offset *= this->sensitivity_;
+	y_offset *= this->sensitivity_;
 
-	this->yaw += xoffset;
-	this->pitch += yoffset;
+	this->yaw_ += x_offset;
+	this->pitch_ += y_offset;
 
-	if (constrainPitch)
+	if (constrain_pitch)
 	{
-		this->pitch > this->maxPitch ? this->pitch = this->maxPitch : this->pitch;
-		this->pitch < -this->maxPitch ? this->pitch = -this->maxPitch : this->pitch;
+		this->pitch_ > this->max_pitch_ ? this->pitch_ = this->max_pitch_ : this->pitch_;
+		this->pitch_ < -this->max_pitch_ ? this->pitch_ = -this->max_pitch_ : this->pitch_;
 	}
 
-	this->updateVectors();
+	this->update_vectors();
 }
 
-void Camera::Move(Movement direction, GLfloat deltaTime)
+void camera::move(const movement direction, const GLfloat delta_time)
 {
-	GLfloat velocity = this->speed * deltaTime;
-	if (direction == FORWARD)
-		this->position += this->axes.front * velocity;
-	if (direction == BACKWARD)
-		this->position -= this->axes.front * velocity;
-	if (direction == LEFT)
-		this->position -= this->axes.right * velocity;
-	if (direction == RIGHT)
-		this->position += this->axes.right * velocity;
+	const auto velocity = this->speed_ * delta_time;
+	if (direction == forward)
+		this->position_ += this->axes_.front * velocity;
+	if (direction == backward)
+		this->position_ -= this->axes_.front * velocity;
+	if (direction == left)
+		this->position_ -= this->axes_.right * velocity;
+	if (direction == right)
+		this->position_ += this->axes_.right * velocity;
 }
 
-void Camera::SethitZoom(GLfloat value)
+void camera::set_hit_zoom(const GLfloat value)
 {
-	this->zoom = value;
+	this->zoom_ = value;
 }
 
-void Camera::SetNearClippingPlane(GLfloat value)
+void camera::set_near_clipping_plane(const GLfloat value)
 {
-	this->nearClip = value;
+	this->near_clip_ = value;
 }
 
-void Camera::SetFarClippingPlane(GLfloat value)
+void camera::set_far_clipping_plane(const GLfloat value)
 {
-	this->farClip = value;
+	this->far_clip_ = value;
 }
 
-void Camera::SetMaxPitch(GLfloat value)
+void camera::set_max_pitch(const GLfloat value)
 {
-	this->maxPitch = value;
+	this->max_pitch_ = value;
 }
 
-void Camera::updateVectors()
+void camera::update_vectors()
 {
 	glm::vec3 front;
-	front.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-	front.y = sin(glm::radians(this->pitch));
-	front.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+	front.x = cos(glm::radians(this->yaw_)) * cos(glm::radians(this->pitch_));
+	front.y = sin(glm::radians(this->pitch_));
+	front.z = sin(glm::radians(this->yaw_)) * cos(glm::radians(this->pitch_));
 
-	this->axes.front = glm::normalize(front);
-	this->axes.right = glm::normalize(glm::cross(this->axes.front, glm::vec3(0.0f, 1.0f, 0.0f)));
-	this->axes.up = glm::normalize(glm::cross(this->axes.right, this->axes.front));
+	this->axes_.front = glm::normalize(front);
+	this->axes_.right = glm::normalize(glm::cross(this->axes_.front, glm::vec3(0.0f, 1.0f, 0.0f)));
+	this->axes_.up = glm::normalize(glm::cross(this->axes_.right, this->axes_.front));
 }

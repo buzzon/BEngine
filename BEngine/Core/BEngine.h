@@ -21,7 +21,7 @@ public:
 	enum WinSize { HEIGHT = 600, WIDTH = 800 };
 
 	Window window;
-	Camera camera;
+	camera camera;
 
 	void UsingGlew();
 	void WriteSpecifications(); // Вывести возможности ПК

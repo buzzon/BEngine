@@ -5,7 +5,7 @@ BEngine engine;
 bool keys[1024];
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
-void do_movement(); 
+void camera_control();
 
 double last_x = static_cast<float>(BEngine::WIDTH) / 2;
 double last_y = static_cast<float>(BEngine::HEIGHT) / 2;
@@ -83,7 +83,7 @@ int main()
 	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
-	glm::vec3 cubePositions[] = {
+	glm::vec3 cube_positions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
 		glm::vec3(-1.5f, -2.2f, -2.5f),
@@ -129,7 +129,7 @@ int main()
 	//GLuint texture_box = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
 	//GLuint texture_face = Texture::LoadTexture("awesome-face.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
 
-	engine.camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	engine.camera = camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	engine.window.SetCursorPos(BEngine::WIDTH / 2, BEngine::HEIGHT / 2);
 	while (!engine.window.WindowShouldClose())
@@ -137,7 +137,7 @@ int main()
 		engine.CalculateDeltaTime();
 
 		glfwPollEvents();
-		do_movement();
+		camera_control();
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -157,7 +157,7 @@ int main()
 		lighting_shader.set_vec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 		lighting_shader.set_vec3("lightPos", light_pos.x, light_pos.y, light_pos.z);
-		const auto player_pos = engine.camera.GetPosition();
+		const auto player_pos = engine.camera.get_position();
 		lighting_shader.set_vec3("viewPos", player_pos.x, player_pos.y, player_pos.z);
 
 		// Bind Textures using texture units
@@ -170,13 +170,13 @@ int main()
 		//glUniform1i(glGetUniformLocation(lightingShader.program, "ourTexture2"), 1);
 
 		// Camera/View transformation
-		glm::mat4 view = engine.camera.GetViewMatrix();
-		glm::mat4 projection = engine.camera.GetProjectionMatrix(static_cast<GLfloat>(BEngine::WIDTH) / static_cast<GLfloat>(BEngine::HEIGHT));
+		glm::mat4 view = engine.camera.get_view_matrix();
+		glm::mat4 projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(BEngine::WIDTH) / static_cast<GLfloat>(BEngine::HEIGHT));
 
 		// Get their uniform location
 		auto model_loc = glGetUniformLocation(lighting_shader.program, "model");
-		auto view_loc  = glGetUniformLocation(lighting_shader.program, "view");
-		auto proj_loc  = glGetUniformLocation(lighting_shader.program, "projection");
+		auto view_loc = glGetUniformLocation(lighting_shader.program, "view");
+		auto proj_loc = glGetUniformLocation(lighting_shader.program, "projection");
 
 		// Pass them to the shaders
 		glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
@@ -186,7 +186,7 @@ int main()
 		for (GLuint i = 0; i < 10; i++)
 		{
 			glm::mat4 model;
-			model = glm::translate(model, cubePositions[i]);
+			model = glm::translate(model, cube_positions[i]);
 			auto angle = 20.0f * i;
 			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
 			glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
@@ -238,17 +238,16 @@ void key_callback(GLFWwindow* window, const int key, int scancode, const int act
 		keys[key] = false;
 }
 
-void do_movement()
+void camera_control()
 {
-	// Camera controls
 	if (keys[GLFW_KEY_W])
-		engine.camera.Move(Camera::Movement::FORWARD, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::forward, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_S])
-		engine.camera.Move(Camera::Movement::BACKWARD, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::backward, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_A])
-		engine.camera.Move(Camera::Movement::LEFT, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::left, engine.GetDeltaTime());
 	if (keys[GLFW_KEY_D])
-		engine.camera.Move(Camera::Movement::RIGHT, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::right, engine.GetDeltaTime());
 }
 
 void mouse_callback(GLFWwindow* window, const double x_pos, const double y_pos)
@@ -256,8 +255,11 @@ void mouse_callback(GLFWwindow* window, const double x_pos, const double y_pos)
 	const GLfloat x_offset = x_pos - last_x;
 	const GLfloat y_offset = last_y - y_pos;
 
-	last_x = x_pos;
-	last_y = y_pos;
+	if (last_x != x_pos || last_y != y_pos)
+	{
+		engine.camera.rotate(x_offset, y_offset);
 
-	engine.camera.Rotate(x_offset, y_offset);
+		last_x = x_pos;
+		last_y = y_pos;
+	}
 };
