@@ -1,44 +1,50 @@
 #include "Window.h"
 #include "Message.h"
 
-void Window::CreateWindow(int width,
-	int height,
-	const char * title,
-	GLFWmonitor * monitor,
-	GLFWwindow * share) {
-	window = glfwCreateWindow(width, height, title, monitor, share);
-	if (window == nullptr) {
+void window::create_window(const int width,
+						   const int height,
+						   const char * title,
+						   GLFWmonitor * monitor,
+						   GLFWwindow * share) {
+	window_ = glfwCreateWindow(width, height, title, monitor, share);
+	if (window_ == nullptr) {
 		glfwTerminate();
 		CauseExeption("Failed to create GLFW window.");
 	}
 	else {
 		glViewport(0, 0, width, height);
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(window_);
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // захватить курсор и скрыть указатель мыши
+		glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // захватить курсор и скрыть указатель мыши
 	}
 }
 
-void Window::SetKeyCallback(GLFWkeyfun key_callback) {
-	glfwSetKeyCallback(window, key_callback);
+void window::set_key_callback(const GLFWkeyfun key_callback) const
+{
+	glfwSetKeyCallback(window_, key_callback);
 }
 
-void Window::SetMouseCallback(GLFWcursorposfun mouse_callback) {
-	glfwSetCursorPosCallback(window, mouse_callback);
+void window::set_mouse_callback(const GLFWcursorposfun mouse_callback) const
+{
+	glfwSetCursorPosCallback(window_, mouse_callback);
 }
 
-void Window::SetCursorPos(GLint xpos, GLint ypos) {
-	glfwSetCursorPos(window, xpos, ypos);
+void window::set_cursor_pos(const GLint x_pos, const GLint y_pos) const
+{
+	glfwSetCursorPos(window_, x_pos, y_pos);
 }
 
-void Window::SwapBuffers() {
-	glfwSwapBuffers(window);
+void window::swap_buffers() const
+{
+	glfwSwapBuffers(window_);
 }
 
-bool Window::WindowShouldClose() {
-	return glfwWindowShouldClose(window);
+bool window::window_should_close() const
+{
+	return glfwWindowShouldClose(window_);
 }
 
-void Window::MakeContextCurrent() {
-	glfwMakeContextCurrent(window);
+void window::make_context_current() const
+{
+	glfwMakeContextCurrent(window_);
 }

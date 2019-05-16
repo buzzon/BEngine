@@ -17,13 +17,13 @@ bool line_mode = false; // Метод отрисовки полигонов
 
 int main()
 {
-	engine.window.CreateWindow(b_engine::width, b_engine::height, "SandBox");
+	engine.window.create_window(b_engine::width, b_engine::height, "SandBox");
 	b_engine::set_enables(GL_DEPTH_TEST, GL_MULTISAMPLE);
 	//engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
 
 	// Set the required callback functions
-	engine.window.SetKeyCallback(key_callback);
-	engine.window.SetMouseCallback(mouse_callback);
+	engine.window.set_key_callback(key_callback);
+	engine.window.set_mouse_callback(mouse_callback);
 
 	b_engine::using_glew();
 	engine.write_specifications();
@@ -132,8 +132,8 @@ int main()
 
 	engine.camera = camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-	engine.window.SetCursorPos(b_engine::width / 2, b_engine::height / 2);
-	while (!engine.window.WindowShouldClose())
+	engine.window.set_cursor_pos(b_engine::width / 2, b_engine::height / 2);
+	while (!engine.window.window_should_close())
 	{
 		engine.calculate_delta_time();
 
@@ -215,7 +215,7 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
-		engine.window.SwapBuffers();
+		engine.window.swap_buffers();
 	}
 	return 0;
 }

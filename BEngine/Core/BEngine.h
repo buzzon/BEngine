@@ -16,7 +16,7 @@ public:
 
 	enum win_size { height = 600, width = 800 };
 
-	Window window;
+	window window{};
 	camera camera;
 
 	static void using_glew();
