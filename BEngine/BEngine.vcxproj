@@ -27,6 +27,7 @@
     <ClCompile Include="Core\Texture.cpp" />
     <ClCompile Include="Core\Message.cpp" />
     <ClCompile Include="Core\Window.cpp" />
+    <ClCompile Include="Core\FaceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h" />
@@ -36,10 +37,15 @@
     <ClInclude Include="Core\Texture.h" />
     <ClInclude Include="Core\Message.h" />
     <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="Core\FaceManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Lamp.frag" />
+    <None Include="Shaders\Lighting.frag" />
+    <None Include="Shaders\Lighting.vert" />
     <None Include="Shaders\FragmentShader.frag" />
     <None Include="Shaders\VertexShader.vert" />
+    <None Include="Shaders\Lamp.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

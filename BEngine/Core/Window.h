@@ -4,26 +4,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Message.h"
-
-class Window
+class window
 {
 public:
-	void CreateWindow(int width, int height, const char* title, GLFWmonitor* monitor = nullptr, GLFWwindow* share = nullptr);
-	void SetKeyCallback(GLFWkeyfun key_callback);
-	void SetMouseCallback(GLFWcursorposfun mouse_callback);
+	void create_window(int width, int height, const char* title, GLFWmonitor* monitor = nullptr, GLFWwindow* share = nullptr);
+	void set_key_callback(GLFWkeyfun key_callback) const;
+	void set_mouse_callback(GLFWcursorposfun mouse_callback) const;
 
-
-	void SetCursorPos(GLint xpos, GLint ypos); // Устанавливает курсор в позицию x y
-	void SwapBuffers(); // Заменяет буферы экрана
-	bool WindowShouldClose(); // Проверяет закрыто ди окно
+	void set_cursor_pos(GLint x_pos, GLint y_pos) const; // Устанавливает курсор в позицию x y
+	void swap_buffers() const; // Заменяет буферы экрана
+	bool window_should_close() const; // Проверяет закрыто ди окно
 
 private:
-	GLFWwindow* window;
-	void MakeContextCurrent();
+	GLFWwindow* window_ = nullptr;
+	void make_context_current() const;
 };
 

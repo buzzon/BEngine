@@ -1,42 +1,54 @@
 #include "BEngine.h"
+#include "Message.h"
 
-void BEngine::WriteSpecifications() {
-	Message("Maximum nr of vertex attributes supported: " + std::to_string( GetMaxNR() ) );
+void b_engine::write_specifications() const
+{
+	message("Maximum nr of vertex attributes supported: " + std::to_string(get_max_nr()));
 }
 
-void BEngine::CalculateNewDeltaTime() {
-	GLfloat currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
+void b_engine::calculate_delta_time() {
+	const GLfloat current_frame = glfwGetTime();
+	delta_time_ = current_frame - last_frame_;
+	last_frame_ = current_frame;
 }
 
-GLfloat BEngine::GetDeltaTime() {
-	return deltaTime;
+void b_engine::set_enables(GLenum cap, ...)
+{
+	auto p = &cap;
+	while (*p) {
+		glEnable(cap);
+		p++;
+	}
 }
 
-int BEngine::GetMaxNR() {
-	GLint nrAttributes;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	return nrAttributes; 
+GLfloat b_engine::get_delta_time() const
+{
+	return delta_time_;
 }
 
-BEngine::BEngine() {
-	Message("Initializing GLFW");
+int b_engine::get_max_nr() {
+	GLint nr_attributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nr_attributes);
+	return nr_attributes;
+}
+
+b_engine::b_engine() {
+	message("Initializing GLFW");
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLFWVERMAJOR);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWVERMINOR);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfw_ver_major);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfw_ver_minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	Message("Starting engine");
+	message("Starting engine");
 }
 
-BEngine::~BEngine() {
+b_engine::~b_engine() {
 	glfwTerminate();
-	Message("Successfully disabled!");
+	message("Successfully disabled!");
 }
 
-void BEngine::UsingGlew() {
+void b_engine::using_glew() {
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
-		CauseExeption("Failed to initialize GLEW.");
+		cause_exeption("Failed to initialize GLEW.");
 }

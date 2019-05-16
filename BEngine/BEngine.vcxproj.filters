@@ -36,10 +36,13 @@
     <ClCompile Include="Core\Message.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Window.cpp">
+    <ClCompile Include="Core\Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Camera.cpp">
+    <ClCompile Include="Core\FaceManager.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Window.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,6 +65,9 @@
     <ClInclude Include="Core\Message.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Core\FaceManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClInclude Include="Core\Window.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -71,6 +77,18 @@
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
     <None Include="Shaders\VertexShader.vert">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lamp.frag">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lamp.vert">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lighting.frag">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lighting.vert">
       <Filter>Исходные файлы\Shaders</Filter>
     </None>
   </ItemGroup>

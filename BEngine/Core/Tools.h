@@ -3,8 +3,8 @@
 #include <iostream>
 #include <fstream>
 
-namespace Tools
+namespace tools
 {
-	extern const char* ReadFile(const char * path);
+	extern const char* read_file(const char * path);
 };
 
