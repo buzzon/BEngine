@@ -32,7 +32,6 @@
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h" />
     <ClInclude Include="Core\Camera.h" />
-    <ClInclude Include="Core\INCLUDE_GL.h" />
     <ClInclude Include="Core\ShaderProgram.h" />
     <ClInclude Include="Core\Tools.h" />
     <ClInclude Include="Core\Texture.h" />

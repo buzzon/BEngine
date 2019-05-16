@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Message.h"
 
 void Window::CreateWindow(int width,
 	int height,

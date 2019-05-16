@@ -1,8 +1,8 @@
 #pragma once
 
-#include "INCLUDE_GL.h"
-
-#include "Message.h"
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 class Window
 {

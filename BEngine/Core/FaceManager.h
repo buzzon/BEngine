@@ -1,13 +1,12 @@
 #pragma once
+#include <GL/glew.h>
 
-#include "INCLUDE_GL.h"
-
-struct FaceManager
+struct face_manager
 {
-	enum Bypass { RIGHT = GL_CW, LEFT = GL_CCW };
-	enum Face { BACK = GL_BACK, FRONT = GL_FRONT, ALL = GL_FRONT_AND_BACK };
+	enum bypass { right = GL_CW, left = GL_CCW };
+	enum face { back = GL_BACK, front = GL_FRONT, all = GL_FRONT_AND_BACK };
 
-	void ClippingFaces(Face face, Bypass bypass); // Отсечение граней
-	void DisableClippingFaces(); // Выключает отсечение граней, отвернутых от наблюдателя
+	static void clipping_faces(face face, bypass bypass); // Отсечение граней
+	static void disable_clipping_faces(); // Выключает отсечение граней, отвернутых от наблюдателя
 };
 

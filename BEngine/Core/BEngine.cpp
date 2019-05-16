@@ -1,4 +1,5 @@
 #include "BEngine.h"
+#include "Message.h"
 
 void b_engine::write_specifications() const
 {

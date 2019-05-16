@@ -1,6 +1,8 @@
 ﻿#pragma once
 
-#include "INCLUDE_GL.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <GL/glew.h>
 
 class camera
 {

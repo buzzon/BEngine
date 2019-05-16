@@ -16,7 +16,7 @@ public:
 
 	enum win_size { height = 600, width = 800 };
 
-	Window window{};
+	Window window;
 	camera camera;
 
 	static void using_glew();
@@ -24,7 +24,7 @@ public:
 	void calculate_delta_time(); // Вычислить значение deltaTime
 
 	static void set_enables(GLenum cap, ...);
-	FaceManager face_manager; // Управляет отсечением граней 
+	face_manager face_manager; // Управляет отсечением граней 
 
 	GLfloat get_delta_time() const; // Возвращает время, прошедшее между последним и текущим кадром
 private:
