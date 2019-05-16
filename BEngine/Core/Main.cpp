@@ -19,7 +19,7 @@ int main()
 {
 	engine.window.create_window(b_engine::width, b_engine::height, "SandBox");
 	b_engine::set_enables(GL_DEPTH_TEST, GL_MULTISAMPLE);
-	//engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
+	//face_manager::clipping_faces(face_manager::face::front, face_manager::bypass::right);
 
 	// Set the required callback functions
 	engine.window.set_key_callback(key_callback);
