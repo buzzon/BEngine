@@ -45,6 +45,11 @@ void shader_program::set_float(const GLchar * name, const float value) const
 	glUniform1f(data, value);
 }
 
+void shader_program::set_location_int(const char* name, const int value) const
+{
+	glUniform1i(glGetUniformLocation(this->program, name), value);
+}
+
 GLint shader_program::load_shader(const GLenum shader_type, const char * path)
 {
 	auto shader_source = tools::read_file(path);
