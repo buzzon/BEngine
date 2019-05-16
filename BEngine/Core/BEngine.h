@@ -1,40 +1,35 @@
 #pragma once
 
-#define GLFWVERMAJOR 3
-#define GLFWVERMINOR 3
+constexpr int glfw_ver_major = 3;
+constexpr int glfw_ver_minor = 3;
 #define GLEW_STATIC
-#include "INCLUDE_GL.h"
 
-#include "ShaderProgram.h"
-#include "Texture.h"
-#include "Message.h"
 #include "Window.h"
 #include "FaceManager.h"
 #include "Camera.h"
 
-class BEngine
+class b_engine
 {
 public:
-	BEngine();
-	~BEngine();
+	b_engine();
+	~b_engine();
 
-	enum WinSize { HEIGHT = 600, WIDTH = 800 };
+	enum win_size { height = 600, width = 800 };
 
-	Window window;
+	Window window{};
 	camera camera;
 
-	void UsingGlew();
-	void WriteSpecifications(); // Вывести возможности ПК
-	void CalculateDeltaTime(); // Вычислить значение deltaTime
+	static void using_glew();
+	void write_specifications() const; // Вывести возможности ПК
+	void calculate_delta_time(); // Вычислить значение deltaTime
 
-	void SetEnables(GLenum cap, ...);
-	FaceManager faceManager; // Управляет отсечением граней 
+	static void set_enables(GLenum cap, ...);
+	FaceManager face_manager; // Управляет отсечением граней 
 
-	GLfloat GetDeltaTime(); // Возвращает время, прошедшее между последним и текущим кадром
+	GLfloat get_delta_time() const; // Возвращает время, прошедшее между последним и текущим кадром
 private:
-	int GetMaxNR(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
+	static int get_max_nr(); // Узнать максимальное количество входных переменных-вершин, передаваемых в шейдер
 
-	GLfloat deltaTime = 0.0f;	// Время, прошедшее между последним и текущим кадром
-	GLfloat lastFrame = 0.0f;  	// Время вывода последнего кадра
+	GLfloat delta_time_ = 0.0f;	// Время, прошедшее между последним и текущим кадром
+	GLfloat last_frame_ = 0.0f;  	// Время вывода последнего кадра
 };
-

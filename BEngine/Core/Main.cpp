@@ -1,14 +1,15 @@
 #include "BEngine.h"
+#include "ShaderProgram.h"
 
-BEngine engine;
+b_engine engine;
 
 bool keys[1024];
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
 void camera_control();
 
-double last_x = static_cast<float>(BEngine::WIDTH) / 2;
-double last_y = static_cast<float>(BEngine::HEIGHT) / 2;
+double last_x = static_cast<float>(b_engine::width) / 2;
+double last_y = static_cast<float>(b_engine::height) / 2;
 
 glm::vec3 light_pos(1.2f, 1.0f, 2.0f);
 
@@ -16,16 +17,16 @@ bool line_mode = false; // Метод отрисовки полигонов
 
 int main()
 {
-	engine.window.CreateWindow(BEngine::WIDTH, BEngine::HEIGHT, "SandBox");
-	engine.SetEnables(GL_DEPTH_TEST, GL_MULTISAMPLE);
+	engine.window.CreateWindow(b_engine::width, b_engine::height, "SandBox");
+	b_engine::set_enables(GL_DEPTH_TEST, GL_MULTISAMPLE);
 	//engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
 
 	// Set the required callback functions
 	engine.window.SetKeyCallback(key_callback);
 	engine.window.SetMouseCallback(mouse_callback);
 
-	engine.UsingGlew();
-	engine.WriteSpecifications();
+	b_engine::using_glew();
+	engine.write_specifications();
 
 
 	shader_program lighting_shader;
@@ -131,10 +132,10 @@ int main()
 
 	engine.camera = camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-	engine.window.SetCursorPos(BEngine::WIDTH / 2, BEngine::HEIGHT / 2);
+	engine.window.SetCursorPos(b_engine::width / 2, b_engine::height / 2);
 	while (!engine.window.WindowShouldClose())
 	{
-		engine.CalculateDeltaTime();
+		engine.calculate_delta_time();
 
 		glfwPollEvents();
 		camera_control();
@@ -171,7 +172,7 @@ int main()
 
 		// Camera/View transformation
 		glm::mat4 view = engine.camera.get_view_matrix();
-		glm::mat4 projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(BEngine::WIDTH) / static_cast<GLfloat>(BEngine::HEIGHT));
+		glm::mat4 projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
 
 		// Get their uniform location
 		auto model_loc = glGetUniformLocation(lighting_shader.program, "model");
@@ -241,13 +242,13 @@ void key_callback(GLFWwindow* window, const int key, int scancode, const int act
 void camera_control()
 {
 	if (keys[GLFW_KEY_W])
-		engine.camera.move(camera::movement::forward, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::forward, engine.get_delta_time());
 	if (keys[GLFW_KEY_S])
-		engine.camera.move(camera::movement::backward, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::backward, engine.get_delta_time());
 	if (keys[GLFW_KEY_A])
-		engine.camera.move(camera::movement::left, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::left, engine.get_delta_time());
 	if (keys[GLFW_KEY_D])
-		engine.camera.move(camera::movement::right, engine.GetDeltaTime());
+		engine.camera.move(camera::movement::right, engine.get_delta_time());
 }
 
 void mouse_callback(GLFWwindow* window, const double x_pos, const double y_pos)
