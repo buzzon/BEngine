@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-constexpr char * b_name = "BEngine";
+#define b_name "BEngine"
 
 /* Оставляет сообщение вида :
  [BEngine] : <message> */
