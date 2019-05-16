@@ -9,7 +9,7 @@ void window::create_window(const int width,
 	window_ = glfwCreateWindow(width, height, title, monitor, share);
 	if (window_ == nullptr) {
 		glfwTerminate();
-		CauseExeption("Failed to create GLFW window.");
+		cause_exeption("Failed to create GLFW window.");
 	}
 	else {
 		glViewport(0, 0, width, height);

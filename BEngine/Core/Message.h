@@ -4,15 +4,15 @@
 #include <iostream>
 #include <string>
 
-#define BName "BEngine"
+constexpr char * b_name = "BEngine";
 
 /* Оставляет сообщение вида :
-[BEngine] : <message>*/
-void Message(std::string message);
+ [BEngine] : <message> */
+void message(const std::string& message);
 
 /* Оставляет сообщение вида :
-[BEngine] [ERROR] : <message>*/
-void ErrorMessage(std::string message);
+ [BEngine] [ERROR] : <message> */
+void error_message(const std::string& message);
 
 /* Оставляет сообщение ErrorMessage и выдает исключение <message> */
-void CauseExeption(std::string message);
+void cause_exeption(const std::string& message);

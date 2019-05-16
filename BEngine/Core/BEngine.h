@@ -2,6 +2,7 @@
 
 constexpr int glfw_ver_major = 3;
 constexpr int glfw_ver_minor = 3;
+
 #define GLEW_STATIC
 
 #include "Window.h"
