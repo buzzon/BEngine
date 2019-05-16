@@ -1,5 +1,7 @@
 #include "BEngine.h"
 #include "ShaderProgram.h"
+#include <SOIL/SOIL.h>
+#include "Texture.h"
 
 b_engine engine;
 
@@ -11,15 +13,15 @@ void camera_control();
 double last_x = static_cast<float>(b_engine::width) / 2;
 double last_y = static_cast<float>(b_engine::height) / 2;
 
-glm::vec3 light_pos(1.2f, 1.0f, 2.0f);
+glm::vec3 light_pos(-0.2f, -1.0f, -0.3f);
 
-bool line_mode = false; // Метод отрисовки полигонов
+bool line_mode = false; // Метод отрисовки полигонов dady is best
 
 int main()
 {
 	engine.window.create_window(b_engine::width, b_engine::height, "SandBox");
 	b_engine::set_enables(GL_DEPTH_TEST, GL_MULTISAMPLE);
-	//engine.faceManager.ClippingFaces(FaceManager::Face::FRONT, FaceManager::Bypass::RIGHT);
+	//face_manager::clipping_faces(face_manager::face::front, face_manager::bypass::right);
 
 	// Set the required callback functions
 	engine.window.set_key_callback(key_callback);
@@ -42,47 +44,48 @@ int main()
 
 	// Load Model
 	float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		// positions          // normals           // texture coords
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
 	glm::vec3 cube_positions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
@@ -108,27 +111,33 @@ int main()
 	glBindVertexArray(container_vao);
 
 	// Атрибут с координатами
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
 	glEnableVertexAttribArray(0);
 	// Атрибут с нормалью
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
-
+	// Атрибут с текстурой
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 
 	// lightVAO
 	GLuint light_vao;
 	glGenVertexArrays(1, &light_vao);
 	glBindVertexArray(light_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
 
 	// Load and create a texture 
-	//GLuint texture_box = Texture::LoadTexture("container.jpg", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
-	//GLuint texture_face = Texture::LoadTexture("awesome-face.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	const auto texture_box = texture::load_texture("container2.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+	const auto texture_box_specular = texture::load_texture("container2_specular.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
+
+	// shader configuration
+// --------------------
+	lighting_shader.use();
+	lighting_shader.set_location_int("material.diffuse", 0);
+	lighting_shader.set_location_int("material.specular", 1);
 
 	engine.camera = camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -143,36 +152,31 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Use corresponding shader when setting uniforms/drawing objects
+		// be sure to activate shader when setting uniforms/drawing objects
 		lighting_shader.use();
-		lighting_shader.set_vec3("material.ambient", 1.0f, 0.5f, 0.31f);
-		lighting_shader.set_vec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-		lighting_shader.set_vec3("material.specular", 0.5f, 0.5f, 0.5f);
-		lighting_shader.set_float("material.shininess", 32.0f);
+		light_pos.z = engine.camera.get_position().z;
+		lighting_shader.set_vec3("light.direction", light_pos);
+		lighting_shader.set_vec3("viewPos", engine.camera.get_position());
 
-		auto diffuse_color = light_color * glm::vec3(0.5f);
-		auto ambient_color = diffuse_color * glm::vec3(0.2f);
+		// light properties
+		lighting_shader.set_vec3("light.ambient", glm::vec3(0.1f));
+		lighting_shader.set_vec3("light.diffuse", glm::vec3(1.0f));
+		lighting_shader.set_vec3("light.specular", glm::vec3(1.0f));
 
-		lighting_shader.set_vec3("light.ambient", ambient_color);
-		lighting_shader.set_vec3("light.diffuse", diffuse_color);
-		lighting_shader.set_vec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-		lighting_shader.set_vec3("lightPos", light_pos.x, light_pos.y, light_pos.z);
-		const auto player_pos = engine.camera.get_position();
-		lighting_shader.set_vec3("viewPos", player_pos.x, player_pos.y, player_pos.z);
+		// material properties
+		lighting_shader.set_vec3("material.specular", glm::vec3(0.5f));
+		lighting_shader.set_float("material.shininess", 64.0f);
 
 		// Bind Textures using texture units
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, texture_box);
-		//glUniform1i(glGetUniformLocation(lightingShader.program, "ourTexture1"), 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture_box);
 
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, texture_face);
-		//glUniform1i(glGetUniformLocation(lightingShader.program, "ourTexture2"), 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture_box_specular);
 
 		// Camera/View transformation
-		glm::mat4 view = engine.camera.get_view_matrix();
-		glm::mat4 projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
+		auto view = engine.camera.get_view_matrix();
+		auto projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
 
 		// Get their uniform location
 		auto model_loc = glGetUniformLocation(lighting_shader.program, "model");
@@ -191,9 +195,9 @@ int main()
 			auto angle = 20.0f * i;
 			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
 			glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-		glBindVertexArray(0);
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lamp_shader.use();
@@ -204,16 +208,16 @@ int main()
 		view_loc = glGetUniformLocation(lamp_shader.program, "view");
 		proj_loc = glGetUniformLocation(lamp_shader.program, "projection");
 		// Set matrices
+
 		glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
-		glm::mat4 model = glm::mat4();
+		auto model = glm::mat4();
 		model = glm::translate(model, light_pos);
 		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
 		glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
 		glBindVertexArray(light_vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
 
 		engine.window.swap_buffers();
 	}

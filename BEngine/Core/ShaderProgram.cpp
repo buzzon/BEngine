@@ -1,6 +1,7 @@
 #include "ShaderProgram.h"
 #include "Tools.h"
 #include "Message.h"
+#include <glm/gtc/type_ptr.inl>
 
 void shader_program::add_shader(const GLenum shader_type, const char * path)
 {
@@ -43,6 +44,11 @@ void shader_program::set_float(const GLchar * name, const float value) const
 {
 	const auto data = glGetUniformLocation(this->program, name);
 	glUniform1f(data, value);
+}
+
+void shader_program::set_location_int(const char* name, const int value) const
+{
+	glUniform1i(glGetUniformLocation(this->program, name), value);
 }
 
 GLint shader_program::load_shader(const GLenum shader_type, const char * path)

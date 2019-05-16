@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
+#include <glm/detail/type_mat4x4.hpp>
 
 constexpr int log_size = 1024;
 
@@ -13,6 +14,7 @@ public:
 	void set_vec3(const GLchar *name, float x, float y, float z) const;
 	void set_vec3(const GLchar * name, const glm::vec3& vec) const;
 	void set_float(const GLchar* name, float value) const;
+	void set_location_int(const char* name, int value) const;
 	GLint program{};
 private:
 	GLint success_ = 0;
