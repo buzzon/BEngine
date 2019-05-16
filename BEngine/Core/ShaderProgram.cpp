@@ -1,60 +1,62 @@
 #include "ShaderProgram.h"
+#include "Tools.h"
+#include "Message.h"
 
-void ShaderProgram::AddShader(GLenum shaderType, const char * path)
+void shader_program::add_shader(const GLenum shader_type, const char * path)
 {
-	GLint shader = LoadShader(shaderType, path);
+	const auto shader = load_shader(shader_type, path);
 	glAttachShader(program, shader);
 	glLinkProgram(program);
 
-	glGetProgramiv(program, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(program, LOG_SIZE, NULL, infoLog);
-		ErrorMessage("SHADER_PROGRAMM::COMPILATION_FAILED\n" + std::string(infoLog) );
+	glGetProgramiv(program, GL_LINK_STATUS, &success_);
+	if (!success_) {
+		glGetProgramInfoLog(program, log_size, nullptr, info_log_);
+		ErrorMessage("SHADER_PROGRAM::COMPILATION_FAILED\n" + std::string(info_log_) );
 	}
 
 	glDeleteShader(shader);
 }
 
-void ShaderProgram::CreateProgram()
+void shader_program::create_program()
 {
 	program = glCreateProgram();
 }
 
-void ShaderProgram::Use()
+void shader_program::use() const
 {
 	glUseProgram(this->program);
 }
 
-void ShaderProgram::setVec3(const GLchar * name, float x, float y, float z)
+void shader_program::set_vec3(const GLchar * name, const float x, const float y, const float z) const
 {
-	GLint lightColorLoc = glGetUniformLocation(this->program, name);
-	glUniform3f(lightColorLoc, x, y, z);
+	const auto data = glGetUniformLocation(this->program, name);
+	glUniform3f(data, x, y, z);
 }
 
-void ShaderProgram::setVec3(const GLchar * name, glm::vec3 vec)
+void shader_program::set_vec3(const GLchar * name, const glm::vec3& vec) const
 {
-	GLint lightColorLoc = glGetUniformLocation(this->program, name);
-	glUniform3f(lightColorLoc, vec.x, vec.y, vec.z);
+	const auto data = glGetUniformLocation(this->program, name);
+	glUniform3f(data, vec.x, vec.y, vec.z);
 }
 
-void ShaderProgram::setFloat(const GLchar * name, float value)
+void shader_program::set_float(const GLchar * name, const float value) const
 {
-	GLint lightColorLoc = glGetUniformLocation(this->program, name);
-	glUniform1f(lightColorLoc, value);
+	const auto data = glGetUniformLocation(this->program, name);
+	glUniform1f(data, value);
 }
 
-GLint ShaderProgram::LoadShader(GLenum shaderType, const char * path)
+GLint shader_program::load_shader(const GLenum shader_type, const char * path)
 {
-	const GLchar* ShaderSource = Tools::ReadFile(path);
+	auto shader_source = Tools::ReadFile(path);
 
-	GLint shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &ShaderSource, NULL);
+	const GLint shader = glCreateShader(shader_type);
+	glShaderSource(shader, 1, &shader_source, nullptr);
 	glCompileShader(shader);
 
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(shader, LOG_SIZE, NULL, infoLog);
-		ErrorMessage(std::to_string(shaderType) + "_SHADER::COMPILATION_FAILED\n" + std::string(infoLog));
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success_);
+	if (!success_) {
+		glGetShaderInfoLog(shader, log_size, nullptr, info_log_);
+		ErrorMessage(std::to_string(shader_type) + "_SHADER::COMPILATION_FAILED\n" + std::string(info_log_));
 	}
 
 	return shader;
