@@ -22,22 +22,26 @@
     <ClCompile Include="Core\BEngine.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\Main.cpp" />
+    <ClCompile Include="Core\Mesh.cpp" />
     <ClCompile Include="Core\ShaderProgram.cpp" />
     <ClCompile Include="Core\Tools.cpp" />
     <ClCompile Include="Core\Texture.cpp" />
     <ClCompile Include="Core\Message.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Core\FaceManager.cpp" />
+    <ClCompile Include="Core\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BEngine.h" />
     <ClInclude Include="Core\Camera.h" />
+    <ClInclude Include="Core\Mesh.h" />
     <ClInclude Include="Core\ShaderProgram.h" />
     <ClInclude Include="Core\Tools.h" />
     <ClInclude Include="Core\Texture.h" />
     <ClInclude Include="Core\Message.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Core\FaceManager.h" />
+    <ClInclude Include="Core\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Lamp.frag" />
