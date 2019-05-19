@@ -9,6 +9,8 @@
 #include <iostream>
 #include <vector>
 #include "ShaderProgram.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
 
 struct vertex {
 	// position
@@ -26,18 +28,18 @@ struct vertex {
 struct b_texture {
 	unsigned int id;
 	std::string type;
-	std::string path;
+	aiString path;
 };
 
 class mesh
 {
 public:
+	mesh(std::vector<vertex> vertices, std::vector<unsigned int> indices, std::vector<b_texture> textures);
 	/*  Mesh Data  */
 	std::vector<vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<b_texture> textures;
 	unsigned int VAO;
-	mesh(std::vector<vertex> vertices, std::vector<unsigned int> indices, std::vector<b_texture> textures);
 	void draw(shader_program shader);
 private:
 	/*  Render data  */

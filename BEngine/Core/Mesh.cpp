@@ -2,7 +2,7 @@
 #include <utility>
 
 
-inline mesh::mesh(std::vector<vertex> vertices, std::vector<unsigned> indices, std::vector<b_texture> textures)
+mesh::mesh(std::vector<vertex> vertices, std::vector<unsigned> indices, std::vector<b_texture> textures)
 {
 	this->vertices = std::move(vertices);
 	this->indices = std::move(indices);

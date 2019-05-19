@@ -10,7 +10,7 @@
 class model
 {
 public:
-	explicit model(char *path)
+	explicit model(const char *path)
 	{
 		load_model(path);
 	}
@@ -18,10 +18,9 @@ public:
 private:
 	std::vector<mesh> meshes_;
 	std::string directory_;
-	void load_model(std::string);
+	void load_model(const std::string path);
 	void process_node(aiNode *node, const aiScene *scene);
-	mesh process_mesh(aiMesh *mesh, const aiScene *scene);
-	std::vector<texture> load_material_textures(aiMaterial *mat, aiTextureType type, std::string type_name);
-
+	static mesh process_mesh(aiMesh *aimesh, const aiScene *scene);
+	static std::vector<b_texture> load_material_textures(aiMaterial *mat, aiTextureType type, std::string type_name);
 };
 

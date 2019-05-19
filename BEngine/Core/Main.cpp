@@ -1,7 +1,6 @@
 #include "BEngine.h"
 #include "ShaderProgram.h"
-#include <SOIL/SOIL.h>
-#include "Texture.h"
+#include "Model.h"
 
 b_engine engine;
 
@@ -21,7 +20,7 @@ int main()
 {
 	engine.window.create_window(b_engine::width, b_engine::height, "SandBox");
 	b_engine::set_enables(GL_DEPTH_TEST, GL_MULTISAMPLE);
-	//face_manager::clipping_faces(face_manager::face::front, face_manager::bypass::right);
+	face_manager::clipping_faces(face_manager::face::front, face_manager::bypass::right);
 
 	// Set the required callback functions
 	engine.window.set_key_callback(key_callback);
@@ -40,101 +39,13 @@ int main()
 	lamp_shader.create_program();
 	lamp_shader.add_shader(GL_VERTEX_SHADER, "Shaders/Lamp.vert");
 	lamp_shader.add_shader(GL_FRAGMENT_SHADER, "Shaders/Lamp.frag");
-	const auto light_color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	// Load Model
-	float vertices[] = {
-		// positions          // normals           // texture coords
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+	
+	model ourModel("nanosuit.obj");
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-	};
-	glm::vec3 cube_positions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-
-	// Create Buffers
-	GLuint vbo, container_vao;
-	glGenVertexArrays(1, &container_vao);
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(container_vao);
-
-	// Атрибут с координатами
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
-	glEnableVertexAttribArray(0);
-	// Атрибут с нормалью
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-	// Атрибут с текстурой
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	// lightVAO
-	GLuint light_vao;
-	glGenVertexArrays(1, &light_vao);
-	glBindVertexArray(light_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-
-	// Load and create a texture 
-	const auto texture_box = texture::load_texture("container2.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
-	const auto texture_box_specular = texture::load_texture("container2_specular.png", GL_TEXTURE_2D, SOIL_LOAD_RGB, GL_RGB);
 
 	// shader configuration
-// --------------------
+	// --------------------
 	lighting_shader.use();
 	lighting_shader.set_int("material.diffuse", 0);
 	lighting_shader.set_int("material.specular", 1);
@@ -167,57 +78,17 @@ int main()
 		lighting_shader.set_vec3("material.specular", glm::vec3(0.5f));
 		lighting_shader.set_float("material.shininess", 64.0f);
 
-		// Bind Textures using texture units
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_box);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture_box_specular);
-
 		// Camera/View transformation
 		auto view = engine.camera.get_view_matrix();
 		auto projection = engine.camera.get_projection_matrix(static_cast<GLfloat>(b_engine::width) / static_cast<GLfloat>(b_engine::height));
+		lighting_shader.set_mat4("view", view);
+		lighting_shader.set_mat4("projection", projection);
 
-		// Get their uniform location
-		auto model_loc = glGetUniformLocation(lighting_shader.program, "model");
-		auto view_loc = glGetUniformLocation(lighting_shader.program, "view");
-		auto proj_loc = glGetUniformLocation(lighting_shader.program, "projection");
-
-		// Pass them to the shaders
-		glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		glBindVertexArray(container_vao);
-		for (GLuint i = 0; i < 10; i++)
-		{
-			glm::mat4 model;
-			model = glm::translate(model, cube_positions[i]);
-			auto angle = 20.0f * i;
-			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-			glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-
-		// Also draw the lamp object, again binding the appropriate shader
-		lamp_shader.use();
-		lamp_shader.set_vec3("color", light_color);
-
-		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		model_loc = glGetUniformLocation(lamp_shader.program, "model");
-		view_loc = glGetUniformLocation(lamp_shader.program, "view");
-		proj_loc = glGetUniformLocation(lamp_shader.program, "projection");
-		// Set matrices
-
-		glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
+		// render the loaded model
 		auto model = glm::mat4();
-		model = glm::translate(model, light_pos);
-		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-		glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
-		// Draw the light object (using light's vertex attributes)
-		glBindVertexArray(light_vao);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		lighting_shader.set_mat4("model", model);
+		ourModel.draw(lighting_shader);
 
 		engine.window.swap_buffers();
 	}

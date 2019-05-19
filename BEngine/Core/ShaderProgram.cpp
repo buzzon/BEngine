@@ -49,6 +49,11 @@ void shader_program::set_int(const char* name, const int value) const
 	glUniform1i(glGetUniformLocation(this->program, name), value);
 }
 
+void shader_program::set_mat4(const GLchar* name, const glm::mat4& mat4) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(this->program, name), 1, GL_FALSE, glm::value_ptr(mat4));
+}
+
 GLint shader_program::load_shader(const GLenum shader_type, const char * path)
 {
 	auto shader_source = tools::read_file(path);
