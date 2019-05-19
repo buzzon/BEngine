@@ -36,17 +36,15 @@ void shader_program::set_vec3(const GLchar * name, const float x, const float y,
 
 void shader_program::set_vec3(const GLchar * name, const glm::vec3& vec) const
 {
-	const auto data = glGetUniformLocation(this->program, name);
-	glUniform3f(data, vec.x, vec.y, vec.z);
+	glUniform3f(glGetUniformLocation(this->program, name), vec.x, vec.y, vec.z);
 }
 
 void shader_program::set_float(const GLchar * name, const float value) const
 {
-	const auto data = glGetUniformLocation(this->program, name);
-	glUniform1f(data, value);
+	glUniform1f(glGetUniformLocation(this->program, name), value);
 }
 
-void shader_program::set_location_int(const char* name, const int value) const
+void shader_program::set_int(const char* name, const int value) const
 {
 	glUniform1i(glGetUniformLocation(this->program, name), value);
 }

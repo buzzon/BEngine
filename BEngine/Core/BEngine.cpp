@@ -43,7 +43,6 @@ b_engine::b_engine() {
 }
 
 b_engine::~b_engine() {
-	glfwTerminate();
 	message("Successfully disabled!");
 }
 

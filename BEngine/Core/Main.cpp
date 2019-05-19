@@ -136,8 +136,8 @@ int main()
 	// shader configuration
 // --------------------
 	lighting_shader.use();
-	lighting_shader.set_location_int("material.diffuse", 0);
-	lighting_shader.set_location_int("material.specular", 1);
+	lighting_shader.set_int("material.diffuse", 0);
+	lighting_shader.set_int("material.specular", 1);
 
 	engine.camera = camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
